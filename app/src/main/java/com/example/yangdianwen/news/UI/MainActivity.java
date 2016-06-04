@@ -1,4 +1,4 @@
-package com.example.yangdianwen.news;
+package com.example.yangdianwen.news.UI;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,33 +8,32 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
+
+import com.example.yangdianwen.news.R;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    public static final String IS_FIST_RUN = "isFistRun";
     private ArrayList<View> mList = new ArrayList<>();
     private ViewPager mVp;
     int pic[] = {R.drawable.welcome, R.drawable.wy, R.drawable.bd, R.drawable.small};
     ImageView[] points = new ImageView[4];
-    private Button mButton;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mButton = (Button) findViewById(R.id.btn_jump);
         //判断是否为第一次打开应用，使用 SharedPreferences存储状态
         SharedPreferences preferences = getSharedPreferences("runconfig", MODE_PRIVATE);
         //定义标记，为true
-        boolean isFistRun = preferences.getBoolean("isFistRun", true);
+        boolean isFistRun = preferences.getBoolean(IS_FIST_RUN, true);
         //如果不是第一次运行，则调到主界面
         if (!isFistRun) {
             //创建跳转意图,并开启
-            Intent intent = new Intent(MainActivity.this, Second.class);
+            Intent intent = new Intent(MainActivity.this, logoUI.class);
             startActivity(intent);
             finish();
             return;
@@ -45,14 +44,13 @@ public class MainActivity extends AppCompatActivity {
         points[2] = (ImageView) findViewById(R.id.iv2);
         points[3] = (ImageView) findViewById(R.id.iv3);
         setPoint(0);
-
-
         //遍历图片资源，并把数据添加到list集合中
         mVp = (ViewPager) findViewById(R.id.vp);
         for (int i = 0; i < pic.length; i++) {
             //创建ImageView的对象，调用setImageResource方法设置图片
             ImageView iv = new ImageView(this);
             iv.setImageResource(pic[i]);
+            iv.setScaleType(ImageView.ScaleType.FIT_XY);
             mList.add(iv);
         }
         //给viewpager设置数据setAdapter，把图片数据添加进来
@@ -64,30 +62,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-
             }
             //当页面被选中时，来改变底部图标的状态
             @Override
             public void onPageSelected(int position) {
                 setPoint(position);
-                if (position==3){
-                mButton.setVisibility(View.VISIBLE);}else
-                {
-                    mButton.setVisibility(View.INVISIBLE);
-                }
                 //如果poistion大于3，则说明引导页面已到底部，判断是否第一次运行的标记置为false
-                if (position > 3) {
+                if (position >= 3) {
                     //创建跳转意图,并开启
-                    Intent intent = new Intent(MainActivity.this, Second.class);
+                    Intent intent = new Intent(MainActivity.this, logoUI.class);
                     startActivity(intent);
-                    finish();
                     //使用 SharedPreferences保存标记，并修改
                     SharedPreferences preferences = getSharedPreferences("runconfig", MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putBoolean("isFirstRun", false);
+                    editor.putBoolean(IS_FIST_RUN, false);
                     editor.commit();
+                    finish();
                 }
             }
+
             //当页面的滑动状态改变时的方法
             @Override
             public void onPageScrollStateChanged(int state) {
@@ -95,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //设置底部小图标
+    //设置底部小图标的透明度
     public void setPoint(int index) {
         for (int i = 0; i < points.length; i++) {
             if (i == index) {
@@ -107,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void next(View view) {
-        Intent intent = new Intent(MainActivity.this, Second.class);
+        Intent intent = new Intent(MainActivity.this, logoUI.class);
         startActivity(intent);
         finish();
     }
