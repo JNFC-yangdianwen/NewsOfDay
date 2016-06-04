@@ -1,5 +1,6 @@
 package com.example.yangdianwen.news.UI;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,8 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.yangdianwen.news.Bean.GsonBean;
 import com.example.yangdianwen.news.Adapter.DataAdapter;
+import com.example.yangdianwen.news.Bean.GsonBean;
 import com.example.yangdianwen.news.R;
 import com.google.gson.Gson;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -33,16 +34,22 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "LeadUI";
     private ArrayList<GsonBean.Data> mArrayList;
     private ListView mList_item;
+    private ProgressDialog mProgressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         initView();
-
     }
     //初始化主页面
     //在主页面中使用AsyncTask获取网络数据
     private void initView() {
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setTitle("提示信息");
+        mProgressDialog.setMessage("正在下载中,请稍后....");
+        mProgressDialog.setCancelable(true);
+        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mList_item = (ListView) findViewById(R.id.lv_list);
         //主页Actionbar中的控件
         ImageView iv_title_main = (ImageView) findViewById(R.id.iv_title_main);
@@ -80,6 +87,7 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
         ImageView iv_weibo = (ImageView) findViewById(R.id.iv_weibo);
         //更新
         TextView tv_update = (TextView) findViewById(R.id.tv_update);
+
         //控件的监听
         iv_title_main.setOnClickListener(this);
         iv_share.setOnClickListener(this);
@@ -97,6 +105,8 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
         iv_friend.setOnClickListener(this);
         iv_weibo.setOnClickListener(this);
         tv_update.setOnClickListener(this);
+
+
         //执行异步任务，获取网络数据
         new MyAsynctask().execute();
 
@@ -179,12 +189,12 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
             mList_item.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                  if (position==0){
-
-                      Intent intent=new Intent(getApplicationContext(),WebView1.class);
-                      startActivity(intent);
-                  }
-
+                    for (int i = 0; i <position ; i++) {
+                        if (position==i){
+                            Intent intent=new Intent(getApplicationContext(),WebView1.class);
+                            startActivity(intent);
+                        }
+                    }
                 }
             });
         }
@@ -219,6 +229,7 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
         }
         @Override
         protected void onProgressUpdate(Integer... values) {
+
             super.onProgressUpdate(values);
         }
 
