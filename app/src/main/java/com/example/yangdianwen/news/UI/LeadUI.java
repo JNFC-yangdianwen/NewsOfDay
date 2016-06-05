@@ -178,11 +178,11 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
             Log.d(TAG, "onPostExecute: 开始执行解析。。。。。。。。。。。。。。");
             super.onPostExecute(json);
             //调用Gson解析方法
-            ArrayList<GsonBean.Data> objectList = Parsegson(json);
+            ArrayList<GsonBean.Data> datas = Parsegson(json);
             //创建适配器对象myAdapter
-            DataAdapter myAdapter = new DataAdapter(LeadUI.this);
+            DataAdapter myAdapter = new DataAdapter(LeadUI.this,datas,mList_item);
             //调用添加数据方法把由doInbackground传来的数据添加到适配器中
-            myAdapter.addData(objectList);
+            myAdapter.addData(datas);
             //给listview setAdapter
             mList_item.setAdapter(myAdapter);
             mList_item.setOnScrollListener(new AbsListView.OnScrollListener() {

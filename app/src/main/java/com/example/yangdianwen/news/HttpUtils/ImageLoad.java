@@ -7,6 +7,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.LruCache;
 import android.widget.ImageView;
+import android.widget.ListView;
+
+import com.example.yangdianwen.news.Adapter.DataAdapter;
+import com.example.yangdianwen.news.R;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -14,6 +18,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * 异步加载网络图片
@@ -23,7 +29,13 @@ public class ImageLoad {
     private ImageView mImageView;
     private String mUrl;
     private LruCache<String, Bitmap> mCache;
-    public ImageLoad() {
+    private ListView mListView;
+    private Set<mAsyncTask> Task;
+
+
+    public ImageLoad(ListView listVeiw) {
+        mListView = listVeiw;
+        Task = new HashSet<>();
         //获取运行时最大内存
         int maxMemroy = (int) Runtime.getRuntime().maxMemory();
         //缓存大小
@@ -35,6 +47,7 @@ public class ImageLoad {
                 return value.getByteCount();
             }
         };
+
     }
 
     //添加图片到缓存区
@@ -43,10 +56,12 @@ public class ImageLoad {
             mCache.put(url, bitmap);
         }
     }
+
     //获取缓存区中的数据
     public Bitmap getBitmapFromCache(String url) {
         return mCache.get(url);
     }
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -57,6 +72,7 @@ public class ImageLoad {
             }
         }
     };
+
     //使用线程与handler实现信息传递，显示图片
     public void showImageByThread(ImageView imageView, final String url) {
         mImageView = imageView;
@@ -110,40 +126,75 @@ public class ImageLoad {
     //使用AsyncTask实现异步加载
     public void showImageByAsynckTask(ImageView imageView, String url) {
         //从缓存区中获取图片
-         Bitmap bitmap = getBitmapFromCache(url);
+        Bitmap bitmap = getBitmapFromCache(url);
         //如果缓存中没有图片，去网络下载
         if (bitmap == null) {
-            new mAsyncTask(imageView, url).execute(url);
-        }else {
+            imageView.setImageResource(R.drawable.defaultpic);
+            new mAsyncTask(url).execute(url);
+        } else {
             imageView.setImageBitmap(bitmap);
         }
     }
+//用来加载从start到end的图片
+    public void loadImage(int start, int end) {
+        for (int i = start; i < end; i++) {
+            String url = DataAdapter.urls[i];
+            //从缓存区中获取图片
+            Bitmap bitmap = getBitmapFromCache(url);
+            //如果缓存中没有图片，去网络下载
+            if (bitmap == null) {
+                mAsyncTask mTask = new mAsyncTask(url);
+                mTask.execute(url);
+                Task.add(mTask);
+            } else {
+                ImageView imageView = (ImageView) mListView.findViewWithTag(url);
+                imageView.setImageBitmap(bitmap);
+            }
+        }
+    }
+//取消所有当前运行的任务
+    public void cancelAllTasks() {
+        if (Task == null) {
+            for (mAsyncTask task:Task) {
+          task.cancel(false);
+            }
+        }
+    }
+
+
     private class mAsyncTask extends AsyncTask<String, Void, Bitmap> {
-        private ImageView mImageView;
+        //        private ImageView mImageView;
         private String mUrl;
 
-        public mAsyncTask(ImageView imageView, String url) {
-            mImageView = imageView;
+        public mAsyncTask(String url) {
+//            mImageView = imageView;
             mUrl = url;
         }
+
         @Override
         protected Bitmap doInBackground(String... params) {
-            String url=params[0];
+            String url = params[0];
             //从网络获取图片
-            Bitmap bitmap= getBitmapUrl(url);
+            Bitmap bitmap = getBitmapUrl(url);
             if (bitmap != null) {
                 //将图片加入缓存
-             addBitmapToCache(url,bitmap);
+                addBitmapToCache(url, bitmap);
             }
             return bitmap;
         }
+
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
             //为防止图片加载混乱
-            if (mImageView.getTag().equals(mUrl)) {
-                mImageView.setImageBitmap(bitmap);
+//            if (mImageView.getTag().equals(mUrl)) {
+//                mImageView.setImageBitmap(bitmap);
+//            }
+            ImageView imageView = (ImageView) mListView.findViewWithTag(mUrl);
+            if (imageView!=null&&bitmap!=null){
+                imageView.setImageBitmap(bitmap);
             }
+            Task.remove(this);
         }
     }
 }
