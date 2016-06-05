@@ -1,6 +1,7 @@
 package com.example.yangdianwen.news.UI;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.yangdianwen.news.Adapter.DataAdapter;
 import com.example.yangdianwen.news.Bean.GsonBean;
 import com.example.yangdianwen.news.R;
@@ -22,7 +22,6 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,12 +30,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-public class LeadUI extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = "LeadUI";
+public class Home extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = "Home";
     private ArrayList<GsonBean.Data> mArrayList;
     private ReflushUI mList_item;
-
+    private TextView mTvShehui;
+    private TextView mTv_junshi;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +50,8 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
         //主页Actionbar中的控件
         ImageView iv_title_main = (ImageView) findViewById(R.id.iv_title_main);
         ImageView iv_share = (ImageView) findViewById(R.id.iv_title_share);
+        mTvShehui = (TextView)findViewById(R.id.tv_shehui);
+        mTv_junshi = (TextView)findViewById(R.id.tv_junshi);
         //侧拉菜单初始化
         SlidingMenu slidingMenu = new SlidingMenu(this);
         //侧拉菜单的触摸响应范围
@@ -102,6 +103,9 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
         iv_friend.setOnClickListener(this);
         iv_weibo.setOnClickListener(this);
         tv_update.setOnClickListener(this);
+        mTvShehui.setOnClickListener(this);
+        mTv_junshi.setOnClickListener(this);
+        iv_share.setOnClickListener(this);
         //执行异步任务，获取网络数据
         new MyAsynctask().execute();
     }
@@ -111,7 +115,20 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_title_main:
-//                setContentView(R.layout.);
+                Toast.makeText(Home.this, "点击了主页", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.tv_shehui:
+                Toast.makeText(Home.this, "点击了社会", Toast.LENGTH_SHORT).show();
+                mTvShehui.setTextColor(Color.RED);
+                mTv_junshi.setTextColor(Color.BLACK);
+                break;
+            case R.id.tv_junshi:
+                Toast.makeText(Home.this, "点击了军事", Toast.LENGTH_SHORT).show();
+                mTvShehui.setTextColor(Color.BLACK);
+                mTv_junshi.setTextColor(Color.RED);
+                break;
+            case R.id.iv_title_share:
+                Toast.makeText(Home.this, "点击了分享", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.linear_0:
                 Intent intent = new Intent(this, WebView1.class);
@@ -119,39 +136,39 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
                 Toast.makeText(this, "点击了NEWS", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.linear_1:
-                Toast.makeText(LeadUI.this, "点击了FAVORITE", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Home.this, "点击了FAVORITE", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.linear_2:
-                Toast.makeText(LeadUI.this, "点击了LOCAL", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Home.this, "点击了LOCAL", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.linear_3:
-                Toast.makeText(LeadUI.this, "点击了FLLOWME", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Home.this, "点击了FLLOWME", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.linear_4:
-                Toast.makeText(LeadUI.this, "点击了PHOTO", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Home.this, "点击了PHOTO", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.iv_plugin:
                 Toast.makeText(this, "点击了登陆1", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.tv_plugin:
-                Toast.makeText(LeadUI.this, "点击了登陆2", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Home.this, "点击了登陆2", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.iv_weixin:
-                Toast.makeText(LeadUI.this, "点击了登陆3", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Home.this, "点击了登陆3", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.iv_qq:
                 Intent intent_qq = new Intent(this, WebQQ.class);
                 startActivity(intent_qq);
-                Toast.makeText(LeadUI.this, "点击了登陆qq", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Home.this, "点击了登陆qq", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.iv_friend:
-                Toast.makeText(LeadUI.this, "点击了登陆5", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Home.this, "点击了登陆5", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.iv_weibo:
                 Toast.makeText(this, "点击了登陆6", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.tv_update:
-                Toast.makeText(LeadUI.this, "当前版本已是最新", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Home.this, "当前版本已是最新", Toast.LENGTH_SHORT).show();
                 break;
         }
 
@@ -175,7 +192,7 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
             //调用Gson解析方法
             ArrayList<GsonBean.Data> datas = Parsegson(json);
             //创建适配器对象myAdapter
-            DataAdapter myAdapter = new DataAdapter(LeadUI.this,datas,mList_item);
+            DataAdapter myAdapter = new DataAdapter(Home.this,datas,mList_item);
             //调用添加数据方法把由doInbackground传来的数据添加到适配器中
             myAdapter.addData(datas);
             //给listview setAdapter
@@ -271,15 +288,11 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
             Log.d(TAG, "doInBackground: " + mStringBuffer.toString());
             return mStringBuffer.toString();
         }
-
         @Override
         protected void onProgressUpdate(Integer... values) {
-
             super.onProgressUpdate(values);
         }
-
     }
-
     //这是一个解析方法，
     private ArrayList<GsonBean.Data> Parsegson(String json) {
         mArrayList = new ArrayList<>();

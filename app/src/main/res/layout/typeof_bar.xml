@@ -26,32 +26,4 @@
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_title_share_default"/>
     </RelativeLayout>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="38dp"
-        android:layout_below="@+id/rl_1"
-        android:padding="4dp">
-        <TextView android:id="@+id/tv_shehui"
-                  android:layout_width="wrap_content"
-                  android:layout_height="match_parent"
-                  android:padding="3dp"
-                  android:text="社会"
-                  android:textSize="19sp"
-        />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/tv_shehui"
-            android:padding="3dp"
-            android:text="军事"
-            android:textSize="19sp"
-        />
-        <ImageView
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-        android:src="@drawable/typemore_normal"/>
-
-
-    </RelativeLayout>
 </LinearLayout>

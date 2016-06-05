@@ -28,7 +28,7 @@ public class logoUI extends AppCompatActivity {
         //动画结束时的逻辑操作
             @Override
             public void onAnimationEnd(Animation animation) {
-                Intent intent=new Intent(logoUI.this,LeadUI.class);
+                Intent intent=new Intent(logoUI.this,Home.class);
                 startActivity(intent);
                 finish();
             }

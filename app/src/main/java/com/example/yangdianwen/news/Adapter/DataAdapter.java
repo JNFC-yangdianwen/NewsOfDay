@@ -74,7 +74,7 @@ public class DataAdapter extends BaseAdapter implements AbsListView.OnScrollList
     public long getItemId(int position) {
         return position;
     }
-
+//使用viewholder优化
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;

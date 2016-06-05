@@ -19,7 +19,7 @@
         </activity>
         <activity android:name=".UI.logoUI">
         </activity>
-        <activity android:name=".UI.LeadUI">
+        <activity android:name=".UI.Home">
         </activity>
         <activity android:name=".SlidingMenuAcivity">
         </activity>
