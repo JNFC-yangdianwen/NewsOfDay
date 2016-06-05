@@ -11,7 +11,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +35,7 @@ import java.util.List;
 public class LeadUI extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "LeadUI";
     private ArrayList<GsonBean.Data> mArrayList;
-    private ListView mList_item;
+    private ReflushUI mList_item;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +47,7 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
     //初始化主页面
     //在主页面中使用AsyncTask获取网络数据
     private void initView() {
-        mList_item = (ListView) findViewById(R.id.lv_list);
+        mList_item = (ReflushUI) findViewById(R.id.lv_list);
         //主页Actionbar中的控件
         ImageView iv_title_main = (ImageView) findViewById(R.id.iv_title_main);
         ImageView iv_share = (ImageView) findViewById(R.id.iv_title_share);
@@ -103,12 +102,8 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
         iv_friend.setOnClickListener(this);
         iv_weibo.setOnClickListener(this);
         tv_update.setOnClickListener(this);
-
-
         //执行异步任务，获取网络数据
         new MyAsynctask().execute();
-
-
     }
 
     //一些控件的点击事件
@@ -224,7 +219,7 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
             int subid = 1;
             int dir = 1;
             int nid = 1;
-            int cnt=1;
+            int cnt=20;
             GetDate date=new GetDate();
             String date_value = date.getdate();
             Uri uri = Uri.parse(PATH).buildUpon()
