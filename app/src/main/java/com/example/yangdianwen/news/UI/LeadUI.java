@@ -1,12 +1,13 @@
 package com.example.yangdianwen.news.UI;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,6 +28,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +37,6 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "LeadUI";
     private ArrayList<GsonBean.Data> mArrayList;
     private ListView mList_item;
-    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +44,10 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.activity_list);
         initView();
     }
+
     //初始化主页面
     //在主页面中使用AsyncTask获取网络数据
     private void initView() {
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setTitle("提示信息");
-        mProgressDialog.setMessage("正在下载中,请稍后....");
-        mProgressDialog.setCancelable(true);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mList_item = (ListView) findViewById(R.id.lv_list);
         //主页Actionbar中的控件
         ImageView iv_title_main = (ImageView) findViewById(R.id.iv_title_main);
@@ -112,7 +110,8 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
 
 
     }
-//一些控件的点击事件
+
+    //一些控件的点击事件
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -172,6 +171,7 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
     private class MyAsynctask extends AsyncTask<String, Integer, String> {
         private StringBuffer mStringBuffer;
 
+
         //处理ondoInbackground的发来的数据
         @Override
         protected void onPostExecute(String json) {
@@ -185,13 +185,24 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
             myAdapter.addData(objectList);
             //给listview setAdapter
             mList_item.setAdapter(myAdapter);
+            mList_item.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+                }
+            });
             //ListView中的item的点击事件
             mList_item.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    for (int i = 0; i <position ; i++) {
-                        if (position==i){
-                            Intent intent=new Intent(getApplicationContext(),WebView1.class);
+                    for (int i = 0; i < position; i++) {
+                        if (position == i) {
+                            Intent intent = new Intent(getApplicationContext(), WebView1.class);
                             startActivity(intent);
                         }
                     }
@@ -199,34 +210,73 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
             });
         }
 
-
         @Override
         protected String doInBackground(String... params) {
+            //网络地址拼接
+            String PATH = "http://118.244.212.82:9092/newsClient/news_list?";
+            String VER = "ver";
+            String SUBID = "subid";
+            String DIR = "dir";
+            String NID = "nid";
+            String DATE = "stamp";
+            String NUM = "cnt";
+            int version = 1;
+            int subid = 1;
+            int dir = 1;
+            int nid = 1;
+            int cnt=1;
+            GetDate date=new GetDate();
+            String date_value = date.getdate();
+            Uri uri = Uri.parse(PATH).buildUpon()
+                    .appendQueryParameter(VER, Integer.toString(version))
+                    .appendQueryParameter(SUBID, Integer.toString(subid))
+                    .appendQueryParameter(DIR, Integer.toString(dir))
+                    .appendQueryParameter(NID, Integer.toString(nid))
+                    .appendQueryParameter(DATE,date_value)
+                    .appendQueryParameter(NUM,Integer.toString(cnt))
+                    .build();
+            URL url=null;
+            try {
+                 url= new URL(uri.toString());
+                Log.d(TAG, "doInBackground: 网络地址。。。。。。。。。。。。。"+url);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
             //连接地址
-            String Url = "http://118.244.212.82:9092/newsClient/news_list?ver=1&subid=1&dir=1&nid=1&stamp=20160604&cnt=20";
+//            String Url = "http://118.244.212.82:9092/newsClient/news_list?ver=1&subid=1&dir=1&nid=1&stamp=20160601&cnt=20";
             //创建OkHttpClient对象
             OkHttpClient okHttpClient = new OkHttpClient();
             //向网络发起请求
-            Request request = new Request.Builder().url(Url).build();
+            Request request = new Request.Builder().url(url).build();
+            InputStream mInputStream = null;
+            BufferedReader br = null;
             try {
                 //网络响应，并执行
                 Response response = okHttpClient.newCall(request).execute();
                 //获取网络流
-                InputStream inputStream = response.body().byteStream();
+                mInputStream = response.body().byteStream();
                 //创建缓冲区
                 mStringBuffer = new StringBuffer();
                 //写入流
-                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+                br = new BufferedReader(new InputStreamReader(mInputStream));
                 String s;
                 while ((s = br.readLine()) != null) {
                     mStringBuffer.append(s);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    mInputStream.close();
+                    br.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             Log.d(TAG, "doInBackground: " + mStringBuffer.toString());
             return mStringBuffer.toString();
         }
+
         @Override
         protected void onProgressUpdate(Integer... values) {
 
@@ -234,7 +284,8 @@ public class LeadUI extends AppCompatActivity implements View.OnClickListener {
         }
 
     }
-//这是一个解析方法，
+
+    //这是一个解析方法，
     private ArrayList<GsonBean.Data> Parsegson(String json) {
         mArrayList = new ArrayList<>();
         Gson gson = new Gson();
