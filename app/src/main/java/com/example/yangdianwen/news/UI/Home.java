@@ -14,14 +14,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.yangdianwen.news.Adapter.DataAdapter;
 import com.example.yangdianwen.news.Bean.GsonBean;
 import com.example.yangdianwen.news.R;
+import com.example.yangdianwen.news.WebUI.WebQQ;
+import com.example.yangdianwen.news.WebUI.WebView1;
 import com.google.gson.Gson;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,12 +34,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
 public class Home extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "Home";
     private ArrayList<GsonBean.Data> mArrayList;
     private ReflushUI mList_item;
     private TextView mTvShehui;
     private TextView mTv_junshi;
+    private ArrayList<GsonBean.Data> mDatas;
+    public static String mLink;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,8 +58,8 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         //主页Actionbar中的控件
         ImageView iv_title_main = (ImageView) findViewById(R.id.iv_title_main);
         ImageView iv_share = (ImageView) findViewById(R.id.iv_title_share);
-        mTvShehui = (TextView)findViewById(R.id.tv_shehui);
-        mTv_junshi = (TextView)findViewById(R.id.tv_junshi);
+        mTvShehui = (TextView) findViewById(R.id.tv_shehui);
+        mTv_junshi = (TextView) findViewById(R.id.tv_junshi);
         //侧拉菜单初始化
         SlidingMenu slidingMenu = new SlidingMenu(this);
         //侧拉菜单的触摸响应范围
@@ -85,7 +93,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         ImageView iv_weibo = (ImageView) findViewById(R.id.iv_weibo);
         //更新
         TextView tv_update = (TextView) findViewById(R.id.tv_update);
-
         //控件的监听
         iv_title_main.setOnClickListener(this);
         iv_share.setOnClickListener(this);
@@ -190,11 +197,11 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             Log.d(TAG, "onPostExecute: 开始执行解析。。。。。。。。。。。。。。");
             super.onPostExecute(json);
             //调用Gson解析方法
-            ArrayList<GsonBean.Data> datas = Parsegson(json);
+            mDatas = Parsegson(json);
             //创建适配器对象myAdapter
-            DataAdapter myAdapter = new DataAdapter(Home.this,datas,mList_item);
+            DataAdapter myAdapter = new DataAdapter(Home.this, mDatas, mList_item);
             //调用添加数据方法把由doInbackground传来的数据添加到适配器中
-            myAdapter.addData(datas);
+            myAdapter.addData(mDatas);
             //给listview setAdapter
             mList_item.setAdapter(myAdapter);
             mList_item.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -212,10 +219,15 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             mList_item.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    for (int i = 0; i < position; i++) {
+                    for (int i = 0; i < mDatas.size(); i++) {
+                        //点击item获取适配器中的地址链接
                         if (position == i) {
-                            Intent intent = new Intent(getApplicationContext(), WebView1.class);
+                            mLink = mDatas.get(i - 1).getLink();
+                            //创建每个item的点击跳转
+                            Intent intent = new Intent(Home.this, WebView1.class);
+                            //开启网页加载意图
                             startActivity(intent);
+                            Log.d(TAG, "onItemClick: 点击了。。。。。。。。。。。。。。" + mLink);
                         }
                     }
                 }
@@ -236,21 +248,21 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             int subid = 1;
             int dir = 1;
             int nid = 1;
-            int cnt=20;
-            GetDate date=new GetDate();
+            int cnt = 20;
+            GetDate date = new GetDate();
             String date_value = date.getdate();
             Uri uri = Uri.parse(PATH).buildUpon()
                     .appendQueryParameter(VER, Integer.toString(version))
                     .appendQueryParameter(SUBID, Integer.toString(subid))
                     .appendQueryParameter(DIR, Integer.toString(dir))
                     .appendQueryParameter(NID, Integer.toString(nid))
-                    .appendQueryParameter(DATE,date_value)
-                    .appendQueryParameter(NUM,Integer.toString(cnt))
+                    .appendQueryParameter(DATE, date_value)
+                    .appendQueryParameter(NUM, Integer.toString(cnt))
                     .build();
-            URL url=null;
+            URL url = null;
             try {
-                 url= new URL(uri.toString());
-                Log.d(TAG, "doInBackground: 网络地址。。。。。。。。。。。。。"+url);
+                url = new URL(uri.toString());
+                Log.d(TAG, "doInBackground: 网络地址。。。。。。。。。。。。。" + url);
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -288,11 +300,13 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             Log.d(TAG, "doInBackground: " + mStringBuffer.toString());
             return mStringBuffer.toString();
         }
+
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
         }
     }
+
     //这是一个解析方法，
     private ArrayList<GsonBean.Data> Parsegson(String json) {
         mArrayList = new ArrayList<>();

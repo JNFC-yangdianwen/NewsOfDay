@@ -30,7 +30,7 @@ public class ImageLoad {
     private String mUrl;
     private LruCache<String, Bitmap> mCache;
     private ListView mListView;
-    private Set<mAsyncTask> Task;
+    private Set<mAsyncTask> Task;//使用集合添加任务
 
 
     public ImageLoad(ListView listVeiw) {
@@ -145,6 +145,7 @@ public class ImageLoad {
             if (bitmap == null) {
                 mAsyncTask mTask = new mAsyncTask(url);
                 mTask.execute(url);
+                //把任务添加到集合
                 Task.add(mTask);
             } else {
                 ImageView imageView = (ImageView) mListView.findViewWithTag(url);
@@ -160,17 +161,13 @@ public class ImageLoad {
             }
         }
     }
-
-
     private class mAsyncTask extends AsyncTask<String, Void, Bitmap> {
         //        private ImageView mImageView;
         private String mUrl;
-
         public mAsyncTask(String url) {
 //            mImageView = imageView;
             mUrl = url;
         }
-
         @Override
         protected Bitmap doInBackground(String... params) {
             String url = params[0];
@@ -182,7 +179,6 @@ public class ImageLoad {
             }
             return bitmap;
         }
-
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);

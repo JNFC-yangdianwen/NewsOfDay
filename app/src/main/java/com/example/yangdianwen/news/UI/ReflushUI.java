@@ -7,7 +7,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.RotateAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -36,7 +37,6 @@ public class ReflushUI extends ListView implements AbsListView.OnScrollListener 
     final int RELESE = 2;//提示释放状态
     final int REFLASHING = 3;//正在刷新状态
 
-
     public ReflushUI(Context context) {
         super(context);
         initView(context);
@@ -58,14 +58,17 @@ public class ReflushUI extends ListView implements AbsListView.OnScrollListener 
     private void initView(Context context) {
         //布局填充器
         LayoutInflater inflater = LayoutInflater.from(context);
-        //加载布局
+        //加载顶部布局
         header = inflater.inflate(R.layout.header, null);
         measureVeiw(header);
+        //获取顶部布局的高度
         HeaderHeight = header.getMeasuredHeight();
         Log.d(TAG, "initView: 。。。。。。。高度。。。。。。。" + HeaderHeight);
+        //使用高度的负值来隐藏顶部布局
         topPadding(-HeaderHeight);
         //把布局文件添加到listview中
         this.addHeaderView(header);
+        //listview 的滑动监听
         this.setOnScrollListener(this);
     }
 
@@ -73,6 +76,7 @@ public class ReflushUI extends ListView implements AbsListView.OnScrollListener 
     /通知父布局，子布局占用的空间，宽，高
      */
     private void measureVeiw(View view) {
+        //获取子布局
         ViewGroup.LayoutParams parent = view.getLayoutParams();
         if (parent == null) {
             parent = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -80,7 +84,7 @@ public class ReflushUI extends ListView implements AbsListView.OnScrollListener 
             //getChildMeasureSpec三个参数分别表示 左右边距，内边距，子布局宽度
             int width = ViewGroup.getChildMeasureSpec(0, 0, parent.width);
             int height;
-            int tempHeight = parent.height;
+            int tempHeight = parent.height; //子布局的高度
             //高度不为空则填充布局，否则不填充
             if (tempHeight > 0) {
                 height = MeasureSpec.makeMeasureSpec(tempHeight, MeasureSpec.EXACTLY);
@@ -183,13 +187,15 @@ public class ReflushUI extends ListView implements AbsListView.OnScrollListener 
         ImageView arrow = (ImageView) header.findViewById(R.id.arrow);
         ProgressBar progress = (ProgressBar) header.findViewById(R.id.progress);
         //给箭头图片设置动画
-        RotateAnimation anim = new RotateAnimation(0, 180,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
-        anim.setDuration(500);
+        Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.roate);
+//        RotateAnimation anim = new RotateAnimation(0, 180,
+//                RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+//        anim.setDuration(500);
         anim.setFillAfter(true);
-        RotateAnimation anim1 = new RotateAnimation(180, 0,
-                RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
-        anim1.setDuration(500);
+        Animation anim1 = AnimationUtils.loadAnimation(getContext(), R.anim.rorate1);
+//        RotateAnimation anim1 = new RotateAnimation(180, 0,
+//                RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f);
+//        anim1.setDuration(500);
         anim1.setFillAfter(true);
         switch (state) {
             case NONE:
@@ -217,15 +223,15 @@ public class ReflushUI extends ListView implements AbsListView.OnScrollListener 
                 break;
         }
     }
-
     public void reflashComplet() {
         state = NONE;
         isRemark = false;
         reFlashViewByState();
         TextView last_update_time = (TextView) findViewById(R.id.last_update_time);
-        SimpleDateFormat sdf=new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
-        Date date=new Date(System.currentTimeMillis());
-        String time=sdf.format(date);
+        //获取时间
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 hh:mm:ss");
+        Date date = new Date(System.currentTimeMillis());
+        String time = sdf.format(date);
         last_update_time.setText(time);
     }
 }

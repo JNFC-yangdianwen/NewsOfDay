@@ -1,4 +1,4 @@
-package com.example.yangdianwen.news.UI;
+package com.example.yangdianwen.news.WebUI;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

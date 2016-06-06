@@ -29,7 +29,6 @@ public class DataAdapter extends BaseAdapter implements AbsListView.OnScrollList
     private int mEnd;
     public static String[] urls;
     private boolean isFirstRun;
-
     //自定义布局加载器
     public DataAdapter(Context context, List<GsonBean.Data> data, ListView listview) {
         mList = data;
@@ -42,22 +41,17 @@ public class DataAdapter extends BaseAdapter implements AbsListView.OnScrollList
         listview.setOnScrollListener(this);
         isFirstRun = true;
     }
-
     public void addSingle(GsonBean.Data data) {
         mList.add(data);
     }
-
     //添加数据方法
     public void addData(List<GsonBean.Data> list) {
         mList.addAll(list);
     }
-
     //清除数据方法
     public void clear() {
         mList.clear();
     }
-
-
     //返回数据长度
     @Override
     public int getCount() {
@@ -104,7 +98,6 @@ public class DataAdapter extends BaseAdapter implements AbsListView.OnScrollList
         viewHolder.tv_date.setText(gsonBean.getStamp().toString());
         return convertView;
     }
-
     //listView滑动状态改变时
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -115,16 +108,10 @@ public class DataAdapter extends BaseAdapter implements AbsListView.OnScrollList
         } else {
             //停止任务
             mImageLoad.cancelAllTasks();
-
-
         }
-
-
     }
-
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
         mStart = firstVisibleItem;
         mEnd = firstVisibleItem + visibleItemCount;
         //判断是否为第一次加载
@@ -133,7 +120,6 @@ public class DataAdapter extends BaseAdapter implements AbsListView.OnScrollList
             isFirstRun=false;
         }
     }
-
     class ViewHolder {
         public ImageView iv_icon;
         public TextView tv_title;
