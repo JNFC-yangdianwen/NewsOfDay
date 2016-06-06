@@ -13,13 +13,12 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.yangdianwen.news.Adapter.DataAdapter;
 import com.example.yangdianwen.news.Bean.GsonBean;
 import com.example.yangdianwen.news.R;
+import com.example.yangdianwen.news.WebUI.Base_WebView;
 import com.example.yangdianwen.news.WebUI.WebQQ;
-import com.example.yangdianwen.news.WebUI.WebView1;
 import com.google.gson.Gson;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.squareup.okhttp.OkHttpClient;
@@ -43,7 +42,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     private TextView mTv_junshi;
     private ArrayList<GsonBean.Data> mDatas;
     public static String mLink;
-
+    private SlidingMenu mSlidingMenu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,16 +60,16 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         mTvShehui = (TextView) findViewById(R.id.tv_shehui);
         mTv_junshi = (TextView) findViewById(R.id.tv_junshi);
         //侧拉菜单初始化
-        SlidingMenu slidingMenu = new SlidingMenu(this);
+        mSlidingMenu = new SlidingMenu(this);
         //侧拉菜单的触摸响应范围
-        slidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
-        slidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
-        slidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
+        mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+        mSlidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
+        mSlidingMenu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);
         //设置侧拉菜单的偏移量
-        slidingMenu.setBehindOffsetRes(R.dimen.sliding_menu_width);
+        mSlidingMenu.setBehindOffsetRes(R.dimen.sliding_menu_width);
         //布置侧拉菜单界面
-        slidingMenu.setMenu(R.layout.sliding_menu_type);
-        slidingMenu.setSecondaryMenu(R.layout.second_slidingmenu);
+        mSlidingMenu.setMenu(R.layout.sliding_menu_type);
+        mSlidingMenu.setSecondaryMenu(R.layout.second_slidingmenu);
         //左菜单的控件id
         LinearLayout linearLayout_0 = (LinearLayout) findViewById(R.id.linear_0);
         LinearLayout linearLayout_1 = (LinearLayout) findViewById(R.id.linear_1);
@@ -122,60 +121,50 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_title_main:
-                Toast.makeText(Home.this, "点击了主页", Toast.LENGTH_SHORT).show();
+                mSlidingMenu.setOnOpenedListener(new SlidingMenu.OnOpenedListener() {
+                    @Override
+                    public void onOpened() {
+                        mSlidingMenu.showMenu();
+                    }
+                });
                 break;
             case R.id.tv_shehui:
-                Toast.makeText(Home.this, "点击了社会", Toast.LENGTH_SHORT).show();
                 mTvShehui.setTextColor(Color.RED);
                 mTv_junshi.setTextColor(Color.BLACK);
                 break;
             case R.id.tv_junshi:
-                Toast.makeText(Home.this, "点击了军事", Toast.LENGTH_SHORT).show();
                 mTvShehui.setTextColor(Color.BLACK);
                 mTv_junshi.setTextColor(Color.RED);
                 break;
             case R.id.iv_title_share:
-                Toast.makeText(Home.this, "点击了分享", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.linear_0:
-                Intent intent = new Intent(this, WebView1.class);
+                Intent intent = new Intent(this, Base_WebView.class);
                 startActivity(intent);
-                Toast.makeText(this, "点击了NEWS", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.linear_1:
-                Toast.makeText(Home.this, "点击了FAVORITE", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.linear_2:
-                Toast.makeText(Home.this, "点击了LOCAL", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.linear_3:
-                Toast.makeText(Home.this, "点击了FLLOWME", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.linear_4:
-                Toast.makeText(Home.this, "点击了PHOTO", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.iv_plugin:
-                Toast.makeText(this, "点击了登陆1", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.tv_plugin:
-                Toast.makeText(Home.this, "点击了登陆2", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.iv_weixin:
-                Toast.makeText(Home.this, "点击了登陆3", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.iv_qq:
                 Intent intent_qq = new Intent(this, WebQQ.class);
                 startActivity(intent_qq);
-                Toast.makeText(Home.this, "点击了登陆qq", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.iv_friend:
-                Toast.makeText(Home.this, "点击了登陆5", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.iv_weibo:
-                Toast.makeText(this, "点击了登陆6", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.tv_update:
-                Toast.makeText(Home.this, "当前版本已是最新", Toast.LENGTH_SHORT).show();
                 break;
         }
 
@@ -222,12 +211,13 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                     for (int i = 0; i < mDatas.size(); i++) {
                         //点击item获取适配器中的地址链接
                         if (position == i) {
+                            //get方法中i要减1 是因为listview的item的position默认从1开始
                             mLink = mDatas.get(i - 1).getLink();
                             //创建每个item的点击跳转
-                            Intent intent = new Intent(Home.this, WebView1.class);
+                            Intent intent = new Intent(Home.this, Base_WebView.class);
                             //开启网页加载意图
                             startActivity(intent);
-                            Log.d(TAG, "onItemClick: 点击了。。。。。。。。。。。。。。" + mLink);
+                            Log.d(TAG, "onItemClick: 点击了。。。。。。。。。。。。。。" + position);
                         }
                     }
                 }

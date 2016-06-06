@@ -13,7 +13,6 @@
         <activity android:name=".UI.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -23,7 +22,7 @@
         </activity>
         <activity android:name=".SlidingMenuAcivity">
         </activity>
-        <activity android:name=".WebUI.WebView1">
+        <activity android:name=".WebUI.Base_WebView">
         </activity>
         <activity android:name=".WebUI.WebQQ">
         </activity>

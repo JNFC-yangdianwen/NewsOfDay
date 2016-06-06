@@ -4,13 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".WebUI.WebView1">
-<TextView android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:text="这是新闻主页"
-/>
+    tools:context=".WebUI.Base_WebView">
+    <include
+        layout="@layout/actionbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/include">
+
+    </include>
+    <WebView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/webView"
+        android:layout_alignParentLeft="true" android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true" android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true" android:layout_below="@+id/include"/>
 </RelativeLayout>
