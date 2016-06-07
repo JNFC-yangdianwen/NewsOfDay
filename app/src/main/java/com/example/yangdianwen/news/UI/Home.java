@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,14 +40,18 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     private TextView mTvShehui;
     private TextView mTv_junshi;
     private ArrayList<GsonBean.Data> mDatas;
-    public static String mLink;
+    public static String mLink;//网络连接地址
     private SlidingMenu mSlidingMenu;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
+
         initView();
+//        initEvents();
     }
+
 
     //初始化主页面
     //在主页面中使用AsyncTask获取网络数据
@@ -60,7 +63,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         mTvShehui = (TextView) findViewById(R.id.tv_shehui);
         mTv_junshi = (TextView) findViewById(R.id.tv_junshi);
         //侧拉菜单初始化
-        mSlidingMenu = new SlidingMenu(this);
+       mSlidingMenu=new SlidingMenu(this);
         //侧拉菜单的触摸响应范围
         mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         mSlidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
@@ -92,7 +95,8 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         ImageView iv_weibo = (ImageView) findViewById(R.id.iv_weibo);
         //更新
         TextView tv_update = (TextView) findViewById(R.id.tv_update);
-        //控件的监听
+
+
         iv_title_main.setOnClickListener(this);
         iv_share.setOnClickListener(this);
         //给左菜单控件绑定监听，实现点击效果
@@ -121,13 +125,10 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_title_main:
-                mSlidingMenu.setOnOpenedListener(new SlidingMenu.OnOpenedListener() {
-                    @Override
-                    public void onOpened() {
-                        mSlidingMenu.showMenu();
-                    }
-                });
+                //左侧sliding menu的拉出和隐藏，调用toggle方法
+                mSlidingMenu.toggle();
                 break;
+            //设置分类的点击事件
             case R.id.tv_shehui:
                 mTvShehui.setTextColor(Color.RED);
                 mTv_junshi.setTextColor(Color.BLACK);
@@ -137,12 +138,15 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 mTv_junshi.setTextColor(Color.RED);
                 break;
             case R.id.iv_title_share:
+                //显示右侧的sliding menu
+                mSlidingMenu.toggle();
+                mSlidingMenu.showSecondaryMenu();
                 break;
             case R.id.linear_0:
-                Intent intent = new Intent(this, Base_WebView.class);
-                startActivity(intent);
+                mSlidingMenu.toggle();
                 break;
             case R.id.linear_1:
+
                 break;
             case R.id.linear_2:
                 break;
@@ -151,6 +155,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             case R.id.linear_4:
                 break;
             case R.id.iv_plugin:
+                Intent intent = new Intent(this, Plugin.class);
+                startActivity(intent);
+                mSlidingMenu.toggle();
                 break;
             case R.id.tv_plugin:
                 break;
@@ -179,7 +186,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     private class MyAsynctask extends AsyncTask<String, Integer, String> {
         private StringBuffer mStringBuffer;
 
-
         //处理ondoInbackground的发来的数据
         @Override
         protected void onPostExecute(String json) {
@@ -193,17 +199,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
             myAdapter.addData(mDatas);
             //给listview setAdapter
             mList_item.setAdapter(myAdapter);
-            mList_item.setOnScrollListener(new AbsListView.OnScrollListener() {
-                @Override
-                public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-                }
-
-                @Override
-                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-                }
-            });
             //ListView中的item的点击事件
             mList_item.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override

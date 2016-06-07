@@ -20,11 +20,13 @@
         </activity>
         <activity android:name=".UI.Home">
         </activity>
-        <activity android:name=".SlidingMenuAcivity">
+        <activity android:name=".UI.Plugin">
         </activity>
         <activity android:name=".WebUI.Base_WebView">
         </activity>
         <activity android:name=".WebUI.WebQQ">
+        </activity>
+        <activity android:name=".UI.Regist">
         </activity>
     </application>
 

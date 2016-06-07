@@ -102,13 +102,13 @@ public class DataAdapter extends BaseAdapter implements AbsListView.OnScrollList
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         //当前滚动停止
-        if (scrollState == SCROLL_STATE_IDLE) {
-            //加载可见项
-            mImageLoad.loadImage(mStart, mEnd);
-        } else {
-            //停止任务
-            mImageLoad.cancelAllTasks();
-        }
+//        if (scrollState == SCROLL_STATE_IDLE) {
+//            //加载可见项
+//            mImageLoad.loadImage(mStart, mEnd);
+//        } else {
+//            //停止任务
+//            mImageLoad.cancelAllTasks();
+//        }
     }
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
