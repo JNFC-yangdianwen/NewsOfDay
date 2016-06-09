@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -33,10 +34,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Home extends AppCompatActivity implements View.OnClickListener {
+public class Home extends AppCompatActivity implements View.OnClickListener,ReFlashListView.IReflashListener{
     private static final String TAG = "Home";
     private ArrayList<GsonBean.Data> mArrayList;
-    private ReflushUI mList_item;
+    private ReFlashListView mList_item;
     private TextView mTvShehui;
     private TextView mTv_junshi;
     private ArrayList<GsonBean.Data> mDatas;
@@ -56,7 +57,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
     //初始化主页面
     //在主页面中使用AsyncTask获取网络数据
     private void initView() {
-        mList_item = (ReflushUI) findViewById(R.id.lv_list);
+        mList_item = (ReFlashListView) findViewById(R.id.lv_list);
         //主页Actionbar中的控件
         ImageView iv_title_main = (ImageView) findViewById(R.id.iv_title_main);
         ImageView iv_share = (ImageView) findViewById(R.id.iv_title_share);
@@ -116,6 +117,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
         mTvShehui.setOnClickListener(this);
         mTv_junshi.setOnClickListener(this);
         iv_share.setOnClickListener(this);
+        mList_item.setInterface(this);
         //执行异步任务，获取网络数据
         new MyAsynctask().execute();
     }
@@ -160,6 +162,9 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 mSlidingMenu.toggle();
                 break;
             case R.id.tv_plugin:
+                Intent intent1 = new Intent(this, Plugin.class);
+                startActivity(intent1);
+                mSlidingMenu.toggle();
                 break;
             case R.id.iv_weixin:
                 break;
@@ -175,6 +180,21 @@ public class Home extends AppCompatActivity implements View.OnClickListener {
                 break;
         }
 
+    }
+
+    public void onReflash() {
+        // TODO Auto-generated method stub\
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                //获取最新数据
+                //通知界面显示
+                //通知listview 刷新数据完毕；
+                mList_item.reflashComplete();
+            }
+        }, 2000);
     }
 /*
 *

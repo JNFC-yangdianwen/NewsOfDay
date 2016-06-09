@@ -46,13 +46,13 @@
             android:layout_gravity="end"
             android:src="@drawable/typemore_normal"/>
     </LinearLayout>
-    <com.example.yangdianwen.news.UI.ReflushUI
+    <com.example.yangdianwen.news.UI.ReFlashListView
 
         android:id="@+id/lv_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/ll"
     >
-    </com.example.yangdianwen.news.UI.ReflushUI>
+    </com.example.yangdianwen.news.UI.ReFlashListView>
 
 </RelativeLayout>
