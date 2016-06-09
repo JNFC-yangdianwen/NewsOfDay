@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.yangdianwen.news.Adapter.DataAdapter;
 import com.example.yangdianwen.news.Bean.GsonBean;
+import com.example.yangdianwen.news.Fragment.SubType;
 import com.example.yangdianwen.news.R;
 import com.example.yangdianwen.news.WebUI.Base_WebView;
 import com.example.yangdianwen.news.WebUI.WebQQ;
@@ -61,6 +62,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
         //主页Actionbar中的控件
         ImageView iv_title_main = (ImageView) findViewById(R.id.iv_title_main);
         ImageView iv_share = (ImageView) findViewById(R.id.iv_title_share);
+        ImageView iv_front = (ImageView) findViewById(R.id.iv_front);
         mTvShehui = (TextView) findViewById(R.id.tv_shehui);
         mTv_junshi = (TextView) findViewById(R.id.tv_junshi);
         //侧拉菜单初始化
@@ -96,8 +98,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
         ImageView iv_weibo = (ImageView) findViewById(R.id.iv_weibo);
         //更新
         TextView tv_update = (TextView) findViewById(R.id.tv_update);
-
-
+        iv_front.setOnClickListener(this);
         iv_title_main.setOnClickListener(this);
         iv_share.setOnClickListener(this);
         //给左菜单控件绑定监听，实现点击效果
@@ -126,6 +127,10 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.iv_front:
+                Intent intent=new Intent(this,SubType.class);
+                startActivity(intent);
+                break;
             case R.id.iv_title_main:
                 //左侧sliding menu的拉出和隐藏，调用toggle方法
                 mSlidingMenu.toggle();
@@ -157,8 +162,8 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
             case R.id.linear_4:
                 break;
             case R.id.iv_plugin:
-                Intent intent = new Intent(this, Plugin.class);
-                startActivity(intent);
+                Intent intent2 = new Intent(this, Plugin.class);
+                startActivity(intent2);
                 mSlidingMenu.toggle();
                 break;
             case R.id.tv_plugin:
@@ -179,9 +184,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
             case R.id.tv_update:
                 break;
         }
-
     }
-
     public void onReflash() {
         // TODO Auto-generated method stub\
         Handler handler = new Handler();
@@ -202,10 +205,8 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
 * 实现了在UI线程中获取网络数据
 *
 */
-
     private class MyAsynctask extends AsyncTask<String, Integer, String> {
         private StringBuffer mStringBuffer;
-
         //处理ondoInbackground的发来的数据
         @Override
         protected void onPostExecute(String json) {
@@ -238,7 +239,6 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
                 }
             });
         }
-
         @Override
         protected String doInBackground(String... params) {
             //网络地址拼接
@@ -305,36 +305,20 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
             Log.d(TAG, "doInBackground: " + mStringBuffer.toString());
             return mStringBuffer.toString();
         }
-
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
         }
     }
-
     //这是一个解析方法，
     private ArrayList<GsonBean.Data> Parsegson(String json) {
         mArrayList = new ArrayList<>();
         Gson gson = new Gson();
         //调用fromJson方法解析数据
         GsonBean bean = gson.fromJson(json, GsonBean.class);
-//        //信息为200，说明获取数据成功
-//        String message = bean.getMessage();
-//        //状态码
-//        int status = bean.getStatus();
-        //获取data
         List<GsonBean.Data> data = bean.getData();
-//        //数据集合中的具体信息
+      // 往数据集合中添加数据
         for (int i = 0; i < data.size(); i++) {
-            //图片，链接，nid，日期，内容，标题，类型
-//            String icon = data.get(i).getIcon();
-//            String link = data.get(i).getLink();
-//            int nid = data.get(i).getNid();
-//            String stamp = data.get(i).getStamp();
-//            String summary = data.get(i).getSummary();
-//            String title = data.get(i).getTitle();
-//            int type1 = data.get(i).getType();
-            //往集合中添加数据,注意集合泛型
             mArrayList.add(data.get(i));
         }
         return mArrayList;
