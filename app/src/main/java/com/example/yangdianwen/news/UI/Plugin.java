@@ -76,6 +76,7 @@ public class Plugin extends AppCompatActivity implements View.OnClickListener {
                     return;
                 }
                 break;
+
         }
     }
 }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -26,7 +25,7 @@ public class Regist extends AppCompatActivity implements View.OnClickListener {
     private EditText mEdt_regist_mail;
     private EditText mEdt_regist_user;
     private EditText mEdt_regist_psw;
-    public static final String REG = "[A-Za-z1-9][A-Za-z0-9]{4,10}@[\\w]{2,7}.com";
+    public static final String REG = "[A-Za-z1-9][A-Za-z0-9]{4,10}@[a-z]{2,7}.com";
 
 
     @Override
