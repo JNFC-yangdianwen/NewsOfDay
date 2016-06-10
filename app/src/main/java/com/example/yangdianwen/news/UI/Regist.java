@@ -1,6 +1,6 @@
 package com.example.yangdianwen.news.UI;
 
-import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -71,12 +71,10 @@ public class Regist extends AppCompatActivity implements View.OnClickListener {
             Toast.makeText(Regist.this, "请输入密码", Toast.LENGTH_SHORT).show();
             return;
         } else {
-            //使用 SharedPreferences保存用户信息
-            SharedPreferences sp = getSharedPreferences(USER, MODE_PRIVATE);
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putString(MAIL, mail);
-            editor.putString(USERNAME, user_name);
-            editor.putString(PWD, psw);
+            String sql="insert into user(mail,name,psw,) values()";
+            SQLiteDatabase db=SQLiteDatabase.openOrCreateDatabase("",null);
+            db.execSQL(sql);
+
 
         }
     }

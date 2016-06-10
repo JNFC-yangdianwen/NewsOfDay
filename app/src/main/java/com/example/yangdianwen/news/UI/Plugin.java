@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.yangdianwen.news.R;
@@ -25,38 +26,53 @@ public class Plugin extends AppCompatActivity implements View.OnClickListener {
     private EditText mEt_psw;
     private String mUser_name;
     private String mPsw;
+    private ImageView mIv_home;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.plugin);
         initView();
-
+        initEvents();
 
     }
 
+
+
+    //初始化视图
     private void initView() {
+        mIv_home = (ImageView) findViewById(R.id.iv_home);
         mBtn_regist = (Button) findViewById(R.id.btn_regist);
         mBtn_froget = (Button) findViewById(R.id.btn_forgetPassword);
         mBtn_plugin = (Button) findViewById(R.id.btn_plugin);
         mEt_username = (EditText) findViewById(R.id.et_username);
         mEt_psw = (EditText) findViewById(R.id.et_password);
+
+    }
+    //初始化事件
+    private void initEvents() {
         mBtn_regist.setOnClickListener(this);
         mBtn_froget.setOnClickListener(this);
         mBtn_plugin.setOnClickListener(this);
+        mIv_home.setOnClickListener(this);
     }
-
     @Override
     public void onClick(View v) {
         mUser_name = mEt_username.getText().toString().trim();
         mPsw = mEt_psw.getText().toString().trim();
         switch (v.getId()) {
+            case R.id.iv_home:
+                Intent intent_toHome = new Intent(this,Home.class);
+                startActivity(intent_toHome);
+                finish();
+                break;
             case R.id.btn_regist:
                 Intent intent = new Intent(this, Regist.class);
                 startActivity(intent);
                 break;
             case R.id.btn_forgetPassword:
-                Toast.makeText(Plugin.this, "忘记密码", Toast.LENGTH_SHORT).show();
+               Intent intent_findpsw=new Intent(this,ForgetAccount.class);
+                startActivity(intent_findpsw);
                 break;
             case R.id.btn_plugin:
                 SharedPreferences sharedPreferences = getSharedPreferences("", MODE_PRIVATE);
