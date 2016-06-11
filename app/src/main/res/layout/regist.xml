@@ -71,5 +71,12 @@
                 android:layout_margin="15dp"
                 android:text="点击注册"
                 android:textSize="25sp"/>
+
     </LinearLayout>
+    <CheckBox
+        android:layout_margin="10dp"
+        android:textSize="20sp"
+        android:text="我同意“服务条款”和“网络用户隐私协议和个人信息利用政策”"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
 </LinearLayout>
