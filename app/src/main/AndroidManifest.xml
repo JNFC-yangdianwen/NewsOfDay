@@ -33,6 +33,8 @@
         </activity>
         <activity android:name=".UI.ForgetAccount">
         </activity>
+        <activity android:name=".UI.UserUI">
+        </activity>
         <!--以下的activity标签必须加-->
         <activity android:name="com.mob.tools.MobUIShell"
                   android:configChanges="keyboardHidden|orientation|screenSize"

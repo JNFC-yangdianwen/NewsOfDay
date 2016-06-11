@@ -1,5 +1,6 @@
 package com.example.yangdianwen.news.UI;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -70,5 +71,15 @@ public class Regist extends AppCompatActivity implements View.OnClickListener {
             Toast.makeText(Regist.this, "密码不符合规定", Toast.LENGTH_SHORT).show();
             return;
         }
+        //先试用SharedPreference保存数据看能否保存成功
+        SharedPreferences sp=getSharedPreferences(USER,MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(MAIL,mail);
+        editor.putString(USERNAME,user_name);
+        editor.putString(PWD,psw);
+        editor.commit();
+
+        //以上条件都符合则把用户信息保存到数据库
+
     }
 }

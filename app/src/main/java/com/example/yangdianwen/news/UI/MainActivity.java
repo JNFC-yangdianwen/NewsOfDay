@@ -98,13 +98,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-    public void next(View view) {
-        Intent intent = new Intent(MainActivity.this, logoUI.class);
-        startActivity(intent);
-        finish();
-    }
-
     //自定义ViewPager适配器继承 PagerAdapter，重写getCount，instantiateItem，destroyItem，isViewFromObject，几个方法
     private class MyAdapter extends PagerAdapter {
         private ArrayList<View> mlist;
