@@ -19,7 +19,7 @@ import com.example.yangdianwen.news.Bean.GsonBean;
 import com.example.yangdianwen.news.Fragment.SubType;
 import com.example.yangdianwen.news.R;
 import com.example.yangdianwen.news.WebUI.Base_WebView;
-import com.example.yangdianwen.news.WebUI.WebQQ;
+import com.example.yangdianwen.news.onekeyshare.OnekeyShare;
 import com.google.gson.Gson;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.squareup.okhttp.OkHttpClient;
@@ -172,14 +172,21 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
                 mSlidingMenu.toggle();
                 break;
             case R.id.iv_weixin:
+                //一键分享至微信
+                OnekeyShare onekeyShare=new OnekeyShare();
+                onekeyShare.setTitle("一键分享");
+                onekeyShare.setText("欢迎使用一键分享功能");
+                onekeyShare.show(this);
                 break;
             case R.id.iv_qq:
-                Intent intent_qq = new Intent(this, WebQQ.class);
-                startActivity(intent_qq);
+                //分享至qq
+
                 break;
             case R.id.iv_friend:
+                //分享至朋友圈
                 break;
             case R.id.iv_weibo:
+                //分享至微博
                 break;
             case R.id.tv_update:
                 break;
