@@ -35,7 +35,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Home extends AppCompatActivity implements View.OnClickListener,ReFlashListView.IReflashListener{
+public class Home extends AppCompatActivity implements View.OnClickListener, ReFlashListView.IReflashListener {
     private static final String TAG = "Home";
     private ArrayList<GsonBean.Data> mArrayList;
     private ReFlashListView mList_item;
@@ -44,6 +44,8 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
     private ArrayList<GsonBean.Data> mDatas;
     public static String mLink;//网络连接地址
     private SlidingMenu mSlidingMenu;
+    private static final String APP_ID = "wx4868b35061f87885";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
         setContentView(R.layout.activity_list);
 
         initView();
+
 //        initEvents();
     }
 
@@ -66,7 +69,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
         mTvShehui = (TextView) findViewById(R.id.tv_shehui);
         mTv_junshi = (TextView) findViewById(R.id.tv_junshi);
         //侧拉菜单初始化
-       mSlidingMenu=new SlidingMenu(this);
+        mSlidingMenu = new SlidingMenu(this);
         //侧拉菜单的触摸响应范围
         mSlidingMenu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
         mSlidingMenu.setMode(SlidingMenu.LEFT_RIGHT);
@@ -121,6 +124,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
         mList_item.setInterface(this);
         //执行异步任务，获取网络数据
         new MyAsynctask().execute();
+
     }
 
     //一些控件的点击事件
@@ -128,7 +132,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_front:
-                Intent intent=new Intent(this,SubType.class);
+                Intent intent = new Intent(this, SubType.class);
                 startActivity(intent);
                 break;
             case R.id.iv_title_main:
@@ -173,7 +177,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
                 break;
             case R.id.iv_weixin:
                 //一键分享至微信
-                OnekeyShare onekeyShare=new OnekeyShare();
+                OnekeyShare onekeyShare = new OnekeyShare();
                 onekeyShare.setTitle("一键分享");
                 onekeyShare.setText("欢迎使用一键分享功能");
                 onekeyShare.show(this);
@@ -206,14 +210,16 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
             }
         }, 2000);
     }
-/*
-*
-* 这是一个异步处理消息的内部类
-* 实现了在UI线程中获取网络数据
-*
-*/
+
+    /*
+    *
+    * 这是一个异步处理消息的内部类
+    * 实现了在UI线程中获取网络数据
+    *
+    */
     private class MyAsynctask extends AsyncTask<String, Integer, String> {
         private StringBuffer mStringBuffer;
+
         //处理ondoInbackground的发来的数据
         @Override
         protected void onPostExecute(String json) {
@@ -246,6 +252,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
                 }
             });
         }
+
         @Override
         protected String doInBackground(String... params) {
             //网络地址拼接
@@ -312,11 +319,13 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
             Log.d(TAG, "doInBackground: " + mStringBuffer.toString());
             return mStringBuffer.toString();
         }
+
         @Override
         protected void onProgressUpdate(Integer... values) {
             super.onProgressUpdate(values);
         }
     }
+
     //这是一个解析方法，
     private ArrayList<GsonBean.Data> Parsegson(String json) {
         mArrayList = new ArrayList<>();
@@ -324,7 +333,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener,ReFl
         //调用fromJson方法解析数据
         GsonBean bean = gson.fromJson(json, GsonBean.class);
         List<GsonBean.Data> data = bean.getData();
-      // 往数据集合中添加数据
+        // 往数据集合中添加数据
         for (int i = 0; i < data.size(); i++) {
             mArrayList.add(data.get(i));
         }

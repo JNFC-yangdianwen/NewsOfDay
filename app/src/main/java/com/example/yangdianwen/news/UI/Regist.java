@@ -1,6 +1,5 @@
 package com.example.yangdianwen.news.UI;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -67,15 +66,9 @@ public class Regist extends AppCompatActivity implements View.OnClickListener {
             Toast.makeText(Regist.this, "请输入用户名", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (TextUtils.isEmpty(psw) && (psw.length() < 6 || psw.length() > 16)) {
-            Toast.makeText(Regist.this, "请输入密码", Toast.LENGTH_SHORT).show();
+        if (psw.length() < 6 || psw.length() > 16) {
+            Toast.makeText(Regist.this, "密码不符合规定", Toast.LENGTH_SHORT).show();
             return;
-        } else {
-            String sql="insert into user(mail,name,psw,) values()";
-            SQLiteDatabase db=SQLiteDatabase.openOrCreateDatabase("",null);
-            db.execSQL(sql);
-
-
         }
     }
 }

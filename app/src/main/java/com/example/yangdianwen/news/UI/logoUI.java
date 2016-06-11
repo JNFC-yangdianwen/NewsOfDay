@@ -30,7 +30,7 @@ public class logoUI extends AppCompatActivity {
             public void onAnimationEnd(Animation animation) {
                 Intent intent=new Intent(logoUI.this,Home.class);
                 startActivity(intent);
-                finish();
+//                finish();
             }
             @Override
             public void onAnimationRepeat(Animation animation) {
